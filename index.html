@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 중요한 뉴스모음</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .admin-panel h2 {
+            margin-bottom: 1.5rem;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f0f2f5, #e1e5e9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        .news-content {
+            padding: 1.5rem;
+        }
+
+        .news-category {
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .news-excerpt {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .widget {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .widget h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        /* Ad Spaces */
+        .ad-space {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #dee2e6;
+            padding: 2rem;
+            text-align: center;
+            color: #6c757d;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .ad-space.large {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .ad-space.medium {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Admin Access Button */
+        .admin-access {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .admin-access:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        /* Admin Login Styling */
+        #adminLogin {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">📰 오늘의 중요한 뉴스모음</a>
+                <nav>
+                    <ul>
+                        <li><a href="#home">홈</a></li>
+                        <li><a href="#politics">정치</a></li>
+                        <li><a href="#economy">경제</a></li>
+                        <li><a href="#society">사회</a></li>
+                        <li><a href="#culture">문화</a></li>
+                        <li><a href="#sports">스포츠</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Admin Panel - Hidden by default -->
+        <div class="admin-panel hidden" id="adminPanel">
+            <div id="adminLogin">
+                <h2>🔐 관리자 로그인</h2>
+                <div class="form-group">
+                    <label for="adminPassword">비밀번호</label>
+                    <input type="password" id="adminPassword" placeholder="관리자 비밀번호를 입력하세요">
+                </div>
+                <button onclick="checkAdminPassword()">로그인</button>
+                <button onclick="hideAdminPanel()" style="background: #95a5a6; margin-left: 10px;">취소</button>
+            </div>
+            <div id="adminForm" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>📝 새 뉴스 추가</h2>
+                    <button onclick="logoutAdmin()" style="background: #e74c3c; padding: 0.5rem 1rem; font-size: 0.9rem;">로그아웃</button>
+                </div>
+                <form id="newsForm">
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">카테고리</label>
+                        <select id="category" required>
+                            <option value="">카테고리 선택</option>
+                            <option value="정치">정치</option>
+                            <option value="경제">경제</option>
+                            <option value="사회">사회</option>
+                            <option value="문화">문화</option>
+                            <option value="스포츠">스포츠</option>
+                            <option value="국제">국제</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="excerpt">요약</label>
+                        <textarea id="excerpt" placeholder="뉴스 요약을 입력하세요..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">내용</label>
+                        <textarea id="content" placeholder="뉴스 전체 내용을 입력하세요..." style="height: 200px;" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">작성자</label>
+                        <input type="text" id="author" required>
+                    </div>
+                    <button type="submit">뉴스 발행</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <main>
+                <!-- Top Ad Space -->
+                <div class="ad-space large">
+                    <div>
+                        <h4>구글 애드센스 광고 영역 (728x90)</h4>
+                        <p>여기에 애드센스 코드를 삽입하세요</p>
+                    </div>
+                </div>
+
+                <div class="news-grid" id="newsContainer">
+                    <!-- Sample News Articles -->
+                    <article class="news-card">
+                        <div class="news-image">📸 이미지 영역</div>
+                        <div class="news-content">
+                            <span class="news-category">정치</span>
+                            <h2 class="news-title">새로운 정책 발표, 시민들의 관심 집중</h2>
+                            <p class="news-excerpt">정부에서 발표한 새로운 정책에 대해 시민들의 다양한 반응이 나오고 있습니다. 전문가들은 이번 정책이 경제에 미칠 영향에 대해 분석하고 있습니다.</p>
+                            <div class="news-meta">
+                                <span>2024.01.15</span>
+                                <span>김기자</span>
+                                <button class="delete-btn" onclick="deleteNews(this)">삭제</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="news-card">
+                        <div class="news-image">📸 이미지 영역</div>
+                        <div class="news-content">
+                            <span class="news-category">경제</span>
+                            <h2 class="news-title">주식 시장 동향, 투자자들 주목</h2>
+                            <p class="news-excerpt">오늘 주식 시장은 전일 대비 상승세를 보이며 투자자들의 관심을 끌고 있습니다. 특히 기술주 중심으로 강세를 보이고 있어 향후 전망이 주목됩니다.</p>
+                            <div class="news-meta">
+                                <span>2024.01.14</span>
+                                <span>이기자</span>
+                                <button class="delete-btn" onclick="deleteNews(this)">삭제</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </main>
+
+            <aside class="sidebar">
+                <!-- Side Ad Space -->
+                <div class="ad-space medium">
+                    <div>
+                        <h4>구글 애드센스</h4>
+                        <p>사이드바 광고 (300x250)</p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3>🔥 인기 뉴스</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                            <a href="#" style="text-decoration: none; color: #333;">오늘의 주요 이슈</a>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                            <a href="#" style="text-decoration: none; color: #333;">경제 동향 분석</a>
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            <a href="#" style="text-decoration: none; color: #333;">스포츠 소식</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="widget">
+                    <h3>📊 카테고리별 뉴스</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        <span style="background: #ecf0f1; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">정치</span>
+                        <span style="background: #ecf0f1; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">경제</span>
+                        <span style="background: #ecf0f1; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">사회</span>
+                        <span style="background: #ecf0f1; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">문화</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Side Ad -->
+                <div class="ad-space medium">
+                    <div>
+                        <h4>구글 애드센스</h4>
+                        <p>추가 광고 공간 (300x250)</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Hidden Admin Access Button -->
+    <div class="admin-access" onclick="showAdminPanel()" title="관리자 접근">⚙️</div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 오늘의 중요한 뉴스모음</p>
+        </div>
+    </footer>
+
+    <script>
+        let newsCounter = 1;
+        let isAdminLoggedIn = false;
+        const ADMIN_PASSWORD = "icEcream123gooD123"; // 실제 사용시 더 복잡한 비밀번호로 변경하세요
+
+        function showAdminPanel() {
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('adminLogin').classList.remove('hidden');
+            document.getElementById('adminForm').classList.add('hidden');
+        }
+
+        function hideAdminPanel() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                document.getElementById('adminLogin').classList.add('hidden');
+                document.getElementById('adminForm').classList.remove('hidden');
+                document.getElementById('adminPassword').value = '';
+            } else {
+                alert('비밀번호가 올바르지 않습니다.');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            hideAdminPanel();
+        }
+
+        // Enter 키로 로그인
+        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAdminPassword();
+            }
+        });
+
+        document.getElementById('newsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const excerpt = document.getElementById('excerpt').value;
+            const content = document.getElementById('content').value;
+            const author = document.getElementById('author').value;
+            
+            const currentDate = new Date().toLocaleDateString('ko-KR');
+            
+            const newsHTML = `
+                <article class="news-card">
+                    <div class="news-image">📸 이미지 영역</div>
+                    <div class="news-content">
+                        <span class="news-category">${category}</span>
+                        <h2 class="news-title">${title}</h2>
+                        <p class="news-excerpt">${excerpt}</p>
+                        <div class="news-meta">
+                            <span>${currentDate}</span>
+                            <span>${author}</span>
+                            <button class="delete-btn" onclick="deleteNews(this)">삭제</button>
+                        </div>
+                    </div>
+                </article>
+            `;
+            
+            document.getElementById('newsContainer').insertAdjacentHTML('afterbegin', newsHTML);
+            
+            // 폼 초기화
+            this.reset();
+            
+            // 성공 메시지
+            alert('뉴스가 성공적으로 발행되었습니다!');
+            
+            // 관리자 패널 숨기기
+            document.getElementById('adminForm').classList.add('hidden');
+        });
+
+        function deleteNews(button) {
+            if (confirm('이 뉴스를 삭제하시겠습니까?')) {
+                button.closest('.news-card').remove();
+            }
+        }
+
+        // 카테고리 필터링 기능
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.textContent;
+                
+                if (category === '홈') {
+                    // 모든 뉴스 보이기
+                    document.querySelectorAll('.news-card').forEach(card => {
+                        card.style.display = 'block';
+                    });
+                } else {
+                    // 특정 카테고리만 보이기
+                    document.querySelectorAll('.news-card').forEach(card => {
+                        const cardCategory = card.querySelector('.news-category').textContent;
+                        if (cardCategory === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
